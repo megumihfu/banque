@@ -1,5 +1,12 @@
+import usecases.ConverterDevice;
+import datatransferobject.Response;
+import datatransferobject.IRequestHandle;
+
 public class Main {
     public static void main(String[] args){
-        System.out.println("Hello, World!");
+
+        ConverterDevice converterDevice = new ConverterDevice(reqHandle);
+        Response resp = converterDevice.runConversion();
+        System.out.println(resp.getResponseData());
     }
 }

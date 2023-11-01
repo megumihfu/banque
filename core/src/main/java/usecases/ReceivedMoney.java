@@ -20,4 +20,8 @@ public class ReceivedMoney {
         }
         return new Response("Money received successfully. New balance: " + targetAccount.getBalance());
     }
+
+    public String messageReceived(BankAccount targetAccount){
+        return "New balance is : "+targetAccount.getBalance();
+    }
 }

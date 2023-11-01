@@ -21,7 +21,7 @@ public class BankTransfer {
             ReceivedMoney receivedMoneyUseCase = new ReceivedMoney(requestHandle);
             Response receivedMoneyResponse = receivedMoneyUseCase.receiveMoney(req, targetAccount);
 
-            return new Response("Money transferred successfully. ");
+            return new Response(receivedMoneyUseCase.messageReceived(targetAccount));
         } else {
             return new Response("Insufficient funds in the source account.");
         }

@@ -1,17 +1,20 @@
 package datatransferobject;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class Response {
-    private String respData;
+    private String message;
 
     public Response(String respData){
-        this.respData = respData;
+        this.message = respData;
     }
 
     public String getResponseData(){
-        return respData;
+        return message;
     }
 
     public void setRespData(String respData){
-        this.respData = respData;
+        this.message = respData;
     }
 }

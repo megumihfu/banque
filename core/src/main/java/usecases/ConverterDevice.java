@@ -23,7 +23,7 @@ public class ConverterDevice {
         double poundRate = euroRate * 0.88;
         double dollarRate = euroRate * 1.18;
         double yuanRate = euroRate * 7.95;
-        double dinarRate = euroRate * 0.0092;
+        double dinarRate = euroRate * 3.87;
         double yenRate = euroRate * 129.84;
 
         System.out.println("Equal to :");

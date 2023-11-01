@@ -1,6 +1,5 @@
 package datatransferobject;
 
-public class IRequestHandle {
-    // Votre code ici
-    //System.out.println("testtt");
+public interface IRequestHandle {
+    Response handleRequest(Request req);
 }

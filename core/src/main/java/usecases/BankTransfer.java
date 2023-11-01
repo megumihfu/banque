@@ -6,7 +6,7 @@ import datatransferobject.IRequestHandle;
 import entities.BankAccount;
 
 public class BankTransfer {
-    private IRequestHandle requestHandle;
+    private final IRequestHandle requestHandle;
 
     public BankTransfer(IRequestHandle requestHandle) {
         this.requestHandle = requestHandle;
@@ -17,7 +17,11 @@ public class BankTransfer {
         if (sourceAccount.getBalance() >= transferAmount) {
             sourceAccount.setBalance(sourceAccount.getBalance() - transferAmount);
             targetAccount.setBalance(targetAccount.getBalance() + transferAmount);
-            return new Response("Money transferred successfully.");
+
+            ReceivedMoney receivedMoneyUseCase = new ReceivedMoney(requestHandle);
+            Response receivedMoneyResponse = receivedMoneyUseCase.receiveMoney(req, targetAccount);
+
+            return new Response("Money transferred successfully. ");
         } else {
             return new Response("Insufficient funds in the source account.");
         }

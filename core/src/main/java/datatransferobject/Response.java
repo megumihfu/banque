@@ -17,4 +17,5 @@ public class Response {
     public void setRespData(String respData){
         this.message = respData;
     }
+
 }

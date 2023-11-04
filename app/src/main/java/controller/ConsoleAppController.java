@@ -1,5 +1,5 @@
 package controller;
-
+import java.util.List;
 import datatransferobject.IRequestHandle;
 import datatransferobject.ImplementIRequestHandle;
 import datatransferobject.Request;
@@ -39,81 +39,96 @@ public class ConsoleAppController implements AppController {
 
 
     private void initializeAccounts() {
-        User user1 = new User("John", "Doe", "john@example.com", "+1 123-456-7890", "123 Main Street, Anytown");
-        User user2 = new User("Jane", "Doe", "jane@example.com", "+1 234-567-8901", "456 Elm Street, Anytown");
+        User user1 = new User("Yan", "M", "yan@example.com", "+1 123-456-7890", "123 Main Street, Anytown");
+        User user2 = new User("Ines", "D", "ines@example.com", "+1 234-567-8901", "456 Elm Street, Anytown");
         accountRepository.addAccount(user1.getFirstName() + user1.getLastName(), new BankAccount(UUID.randomUUID(), 5000.0, 1500.0, user1));
         accountRepository.addAccount(user2.getFirstName() + user2.getLastName(), new BankAccount(UUID.randomUUID(), 10000.0, 2000.0, user2));
     }
     private void createNewAccount() {
         presenter.displayMessage("Creating a new account...");
 
-        // Get user details
-        presenter.displayMessage("Enter first name:");
+        presenter.displayMessage("Enter your first name:");
         String firstName = getUserInputString();
-        presenter.displayMessage("Enter last name:");
+        presenter.displayMessage("Enter your last name:");
         String lastName = getUserInputString();
-        presenter.displayMessage("Enter email address:");
+        presenter.displayMessage("Enter your email address:");
         String email = getUserInputString();
-        presenter.displayMessage("Enter phone number:");
+        presenter.displayMessage("Enter your phone number:");
         String phone = getUserInputString();
-        presenter.displayMessage("Enter address:");
+        presenter.displayMessage("Enter your postal address:");
         String address = getUserInputString();
 
         // Create a new User object
         User newUser = new User(firstName, lastName, email, phone, address);
 
         // Set an initial balance and limit for the account, could be user input or predefined
-        double initialBalance = 0.0; // This could also be a user input
-        double initialLimit = 0.0; // This could also be a user input
+        double initialBalance = 0.0;
+        double initialLimit = 0.0;
 
-        // Create a new BankAccount object
         BankAccount newAccount = new BankAccount(UUID.randomUUID(), initialBalance, initialLimit, newUser);
-
-        // Add the account to the repository
         accountRepository.addAccount(newUser.getFirstName() + newUser.getLastName(), newAccount);
 
-        presenter.displayMessage("Account created successfully!");
+        presenter.displayMessage("Account created successfully !");
     }
 
     private boolean authenticateUser() {
-        presenter.displayMessage("Please enter your first name:");
+        presenter.displayMessage("\nAuthentification");
+        presenter.displayMessage("Please enter your first name : ");
         String firstName = getUserInputString();
-        presenter.displayMessage("Please enter your last name:");
+        presenter.displayMessage("Please enter your last name : ");
         String lastName = getUserInputString();
 
         String key = firstName + lastName;
         currentAccount = accountRepository.getAccount(key);
         if (currentAccount != null) {
-            presenter.displayMessage("Authenticated successfully.");
+            presenter.displayMessage("Authentication successful.");
             return true;
         } else {
             presenter.displayMessage("Authentication failed. No account found for the given name.");
             return false;
         }
     }
-    @Override
     public void run() {
-        UUID accountId = UUID.randomUUID();
+        presenter.displayMessage("Do you have an existing account? (yes/no)");
+        presenter.displayMessage("Your choice : ");
+        String hasAccount = getUserInputString().trim().toLowerCase();
 
+        if (hasAccount.equals("yes")) {
+            if (authenticateUser()) {
+                displayMenuAndHandleUserChoice(); // Cette méthode gère le menu existant et les choix de l'utilisateur.
+            } else {
+                presenter.displayMessage("Authentication failed. Redirecting to account creation.");
+                createNewAccount();
+            }
+        } else if (hasAccount.equals("no")) {
+            createNewAccount();
+            displayMenuAndHandleUserChoice();
+        } else {
+            presenter.displayMessage("Invalid response. Please start over.");
+        }
+    }
+    private void displayMenuAndHandleUserChoice() {
         boolean exit = false;
 
         while (!exit) {
-            presenter.displayMessage("Menu:");
-            presenter.displayMessage("1. Converter Device");
-            presenter.displayMessage("2. Bank Transfer");
-            presenter.displayMessage("3. Cap Management");
-            presenter.displayMessage("4. Display Info Account");
+            presenter.displayMessage("\nMenu:");
+            presenter.displayMessage("1. How to use our Bank App");
+            presenter.displayMessage("2. Send monney");
+            presenter.displayMessage("3. Manage your capital limit");
+            presenter.displayMessage("4. Display personnal informations");
             presenter.displayMessage("5. Display RIB");
-            presenter.displayMessage("6. Received Money");
-            presenter.displayMessage("7. Quit");
+            presenter.displayMessage("6. Transaction history");
+            presenter.displayMessage("7. Create a new account");
+            presenter.displayMessage("8. Converter monney");
+            presenter.displayMessage("9. Quit");
 
             int choice = presenter.getUserChoice();
 
             switch (choice) {
                 case 1:
-                    ConverterDevice();
+                    displayInitialMessage();
                     break;
-                case 2: // Bank Transfer
+                case 2:
                     if (authenticateUser()) {
                         BankAccount targetAccount = getAccountFromUser(); // Ajouté pour obtenir le compte cible
                         if (targetAccount != null) {
@@ -123,12 +138,12 @@ public class ConsoleAppController implements AppController {
                         }
                     }
                     break;
-                case 3: // Cap Management
+                case 3:
                     if (authenticateUser()) {
-                        testCapManagement(currentAccount);
+                        CapManagement(currentAccount);
                     }
                     break;
-                case 4: // Display Info Account
+                case 4:
                     if (authenticateUser()) {
                         DisplayInfoAccount(currentAccount);
                     }
@@ -137,29 +152,33 @@ public class ConsoleAppController implements AppController {
                     DisplayRIB(currentAccount);
                     break;
                 case 6:
-                    ReceivedMoney(currentAccount, currentAccount);
+                    if (authenticateUser()) {
+                        displayReceivedTransactions(currentAccount);
+                    }
                     break;
                 case 7:
-                    exit = true;
-                    break;
-                case 8:
                     createNewAccount();
                     break;
+                case 8:
+                    ConverterDevice();
+                    break;
+                case 9:
+                    exit = true;
+                    break;
                 default:
-                    presenter.displayMessage("Invalid choice. Please try again.");
+                    presenter.displayMessage("Invalid choice. Please try again.");;
             }
         }
     }
+
     private BankAccount getAccountFromUser() {
-        presenter.displayMessage("Please enter the account's first name:");
-        String firstName = getUserInputString(); // Supposition qu'une telle méthode existe
-        presenter.displayMessage("Please enter the account's last name:");
-        String lastName = getUserInputString(); // Supposition qu'une telle méthode existe
+        presenter.displayMessage("Please enter the recipient's first name :");
+        String firstName = getUserInputString();
+        presenter.displayMessage("Please enter the recipient's last name :");
+        String lastName = getUserInputString();
 
         String key = firstName + lastName;
 
-        // Supposition que MemoryRepository a une méthode getAccount(String key)
-        // qui retourne un BankAccount ou null si aucun compte n'est trouvé
         return accountRepository.getAccount(key);
     }
 
@@ -172,21 +191,33 @@ public class ConsoleAppController implements AppController {
         Response resp = converterDevice.runConversion();
         presenter.displayMessage(resp.getResponseData());
     }
+    private void displayInitialMessage() {
+        presenter.displayMessage("Bonjour et bienvenue dans notre système de gestion de comptes bancaires.\n "
+                + "Des comptes sont déjà pré-créés, tels que ceux appartenant à Yan M et Ines D. \n"
+                + "Attention à la sensibilité à la casse et aux espaces supplémentaires lors de la saisie des noms pour les transactions.\n "
+                + "Assurez-vous d'entrer les noms correctement pour une expérience optimale.\n");
+
+        presenter.displayMessage("Hello and welcome to our bank account management system.\n "
+                + "Several accounts, such as those belonging to Yan M and Ines D, have been pre-created for your convenience.\n "
+                + "Please be aware of case sensitivity and extra spaces when entering names for transactions.\n "
+                + "Ensure proper name entry for an optimal experience.\n");
+    }
+
 
     private void BankTransfer(BankAccount sourceAccount, BankAccount targetAccount) {
-        presenter.displayMessage("Enter the transfer amount : ");
+        presenter.displayMessage("Enter the amount you want to transfer : ");
         double transferAmount = presenter.getUserDoubleInput();
         Request transferRequest = new Request(Double.toString(transferAmount));
 
         BankTransfer bankTransfer = new BankTransfer(reqHandle);
         Response response = bankTransfer.transferMoney(transferRequest, sourceAccount, targetAccount);
 
-        presenter.displayMessage("source acc = " + sourceAccount.getBalance());
-        presenter.displayMessage("target acc = " + targetAccount.getBalance());
-        presenter.displayMessage(response.getResponseData());
+        presenter.displayMessage("After your transfer you currently have : " + sourceAccount.getBalance());
+
+
     }
 
-    private void testCapManagement(BankAccount sourceAccount) {
+    private void CapManagement(BankAccount sourceAccount) {
         presenter.displayMessage("Enter the new capital limit : ");
         double newLimit = presenter.getUserDoubleInput();
         Request capRequest = new Request(Double.toString(newLimit));
@@ -194,7 +225,7 @@ public class ConsoleAppController implements AppController {
         CapManagement capManagement = new CapManagement(reqHandle);
         Response r = capManagement.manageCapital(capRequest, sourceAccount);
 
-        presenter.displayMessage("source acc = " + sourceAccount.getLimit());
+        presenter.displayMessage("Your new capital limit is at : " + sourceAccount.getLimit());
         presenter.displayMessage(r.getResponseData());
     }
 
@@ -213,6 +244,20 @@ public class ConsoleAppController implements AppController {
         presenter.displayMessage(r2.getResponseData());
     }
 
+    private void displayReceivedTransactions(BankAccount account) {
+        List<Transaction> transactions = account.getIncomingTransactions();
+        if (transactions.isEmpty()) {
+            presenter.displayMessage("No transactions received.");
+            return;
+        }
+        for (Transaction transaction : transactions) {
+            presenter.displayMessage(transaction.toString());
+        }
+        List<Transaction> outgoingTransactions = account.getOutgoingTransactions();
+        for (Transaction transaction : outgoingTransactions) {
+            presenter.displayMessage(transaction.toString());
+        }
+    }
     private void ReceivedMoney(BankAccount sourceAccount, BankAccount targetAccount) {
         ReceivedMoney receivedMoney = new ReceivedMoney(reqHandle);
         receivedMoney.notifyTransferResult(sourceAccount, targetAccount, true);

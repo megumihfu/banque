@@ -20,6 +20,10 @@ public class BankTransfer {
 
             ReceivedMoney receivedMoneyUseCase = new ReceivedMoney(requestHandle);
             Response receivedMoneyResponse = receivedMoneyUseCase.receiveMoney(req, targetAccount);
+            Transaction transaction = new Transaction(transferAmount, sourceAccount.getUser().getFirstName(), targetAccount.getUser().getFirstName());
+            sourceAccount.addOutgoingTransaction(transaction); // Vous devez aussi gérer les transactions sortantes
+            targetAccount.addIncomingTransaction(transaction);
+
 
             return new Response(receivedMoneyUseCase.messageReceived(targetAccount));
         } else {

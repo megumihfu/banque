@@ -20,7 +20,7 @@ public class ConsoleAppPresenter implements AppPresenter {
             return Integer.parseInt(scanner.nextLine());
         } catch (NumberFormatException e) {
             System.out.println("Invalid input. Please enter a number.");
-            return getUserChoice(); // Recursive call to get a valid input
+            return getUserChoice();
         }
     }
 
@@ -31,7 +31,7 @@ public class ConsoleAppPresenter implements AppPresenter {
             return Double.parseDouble(scanner.nextLine());
         } catch (NumberFormatException e) {
             System.out.println("Invalid input. Please enter a valid number.");
-            return getUserDoubleInput(); // Recursive call to get a valid input
+            return getUserDoubleInput();
         }
     }
 }

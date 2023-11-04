@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-//MemoryRepository accountRepository;
 
 
 public class ConsoleAppController implements AppController {
@@ -58,10 +57,9 @@ public class ConsoleAppController implements AppController {
         presenter.displayMessage("Enter your postal address:");
         String address = getUserInputString();
 
-        // Create a new User object
+
         User newUser = new User(firstName, lastName, email, phone, address);
 
-        // Set an initial balance and limit for the account, could be user input or predefined
         double initialBalance = 0.0;
         double initialLimit = 0.0;
 
@@ -130,7 +128,7 @@ public class ConsoleAppController implements AppController {
                     break;
                 case 2:
                     if (authenticateUser()) {
-                        BankAccount targetAccount = getAccountFromUser(); // Ajouté pour obtenir le compte cible
+                        BankAccount targetAccount = getAccountFromUser();
                         if (targetAccount != null) {
                             BankTransfer(currentAccount, targetAccount);
                         } else {

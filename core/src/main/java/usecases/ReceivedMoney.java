@@ -18,11 +18,11 @@ public class ReceivedMoney {
         if (receivedAmount <= 0) {
             return new Response("Invalid amount. Amount should be greater than 0.");
         }
-        return new Response("Money received successfully. New balance: " + targetAccount.getBalance());
+        return new Response("Money received successfully. Your new balance is now : " + targetAccount.getBalance());
     }
 
     public String messageReceived(BankAccount targetAccount){
-        return "New balance is : "+targetAccount.getBalance();
+        return "Your new balance is now : "+targetAccount.getBalance();
     }
 
     public void notifyTransferResult(BankAccount sourceAccount, BankAccount targetAccount, boolean b) {

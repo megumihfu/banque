@@ -20,7 +20,8 @@ public class DisplayInfoAccount {
         }
 
         // Assume BankAccount has a getBalance() method to retrieve the balance.
-        String balanceInfo = String.format("Balance: %.2f", bankAccount.getBalance());
+        String balanceInfo = String.format("Your current balance: %.2f", bankAccount.getBalance());
+        String capInfo = String.format("Your current cap is : %.2f", bankAccount.getCap());
 
         String info = "User Information:\n" +
                 "First Name: " + user.getFirstName() + "\n" +
@@ -28,8 +29,8 @@ public class DisplayInfoAccount {
                 "Email: " + user.getEmail() + "\n" +
                 "Phone Number: " + user.getPhoneNumber() + "\n" +
                 "Address: " + user.getAddress() + "\n" +
-                balanceInfo; // Add the balance information to the user details
-
+                capInfo + "\n" +
+                balanceInfo;
         return new Response(info);
     }
 }

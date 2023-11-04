@@ -1,4 +1,5 @@
 package datatransferobject;
 
-public class IRequestHandle {
+public interface IRequestHandle {
+    Response handleRequest(Request req);
 }

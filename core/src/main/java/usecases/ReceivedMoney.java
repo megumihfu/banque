@@ -24,4 +24,7 @@ public class ReceivedMoney {
     public String messageReceived(BankAccount targetAccount){
         return "New balance is : "+targetAccount.getBalance();
     }
+
+    public void notifyTransferResult(BankAccount sourceAccount, BankAccount targetAccount, boolean b) {
+    }
 }

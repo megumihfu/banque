@@ -1,7 +1,7 @@
 package repositories;
 
-import entities.Entity;
-import gateways.IRepository;
+import entities.*;
+import gateway.IRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.UUID;
 import java.util.function.Predicate;
 
 public class MemoryRepository<T extends Entity> implements IRepository<T> {
-    private List<T>  entities = new ArrayList<>();
+    private final List<T>  entities = new ArrayList<>();
 
     public void addEntity(T entity) {
         entities.add(entity);
